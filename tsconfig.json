@@ -1,0 +1,32 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"strict": true,
+		"outDir": "./dist/",
+		"module": "es2015",
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+		"baseUrl": ".",
+		"paths": {
+			"server/*": [
+				"src/mainProcess/*"
+			],
+
+			"renderer/*": [
+				"src/rendererProcess/*"
+			],
+
+			"shared/*": [
+				"src/shared/*"
+			]
+		}
+	},
+
+	"exclude": [
+		"dist/*",
+		"node_modules/*",
+		"out/*",
+		"build/*",
+	]
+}

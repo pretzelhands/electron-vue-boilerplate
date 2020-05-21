@@ -10,9 +10,9 @@ readdirSync("node_modules").filter(mods => ![".bin", ".cache"].includes(mods)).f
 module.exports = {
 	mode: process.env.NODE_ENV,
 	target: "electron-main",
-	entry: resolve(__dirname, "src/electron-app/main.js"),
+	entry: resolve(__dirname, "src/mainProcess/main.ts"),
 	output: {
-		path: resolve(__dirname, "dist/electron-app/")
+		path: resolve(__dirname, "dist/mainProcess/")
 	},
 	externals: nodeModules,
 	node: {
@@ -29,12 +29,16 @@ module.exports = {
 			exclude: /node_modules/,
 			loader: "eslint-loader",
 			options: {
-				configFile: resolve(__dirname, ".eslintrc-electron-app.js"),
+				configFile: resolve(__dirname, ".eslintrc-mainProcess.js"),
 				emitError: true,
 				emitWarning: true,
 				failOnError: true,
 				failOnWarning: true
 			}
+		}, {
+			test: /\.ts$/,
+			use: 'ts-loader',
+			exclude: /node_modules/,
 		}, {
 			test: /\.m?js$/i,
 			loader: "babel-loader",
@@ -48,9 +52,10 @@ module.exports = {
 		new CleanWebpackPlugin()
 	],
 	resolve: {
-		extensions: [".js", ".mjs", ".json"],
+		extensions: [".js", ".ts", ".mjs", ".json"],
 		alias: {
-			"@": resolve(__dirname, "src/electron-app/")
+			"main": resolve(__dirname, "src/main/"),
+			"shared": resolve(__dirname, "src/shared/"),
 		}
 	}
 };

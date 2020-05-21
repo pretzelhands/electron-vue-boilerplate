@@ -8,9 +8,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
 	mode: process.env.NODE_ENV,
 	target: "electron-renderer",
-	entry: resolve(__dirname, "src/vue-app/main.js"),
+	entry: resolve(__dirname, "src/rendererProcess/main.ts"),
 	output: {
-		path: resolve(__dirname, "dist/vue-app/"),
+		path: resolve(__dirname, "dist/rendererProcess/"),
 //		target: "/",
 		filename: "javascript/[name].[hash:8].js",
 		chunkFilename: "javascript/[id].[chunkhash:8].js"
@@ -36,22 +36,22 @@ module.exports = {
 			exclude: /(node_modules|bower_components)/,
 			loader: "eslint-loader",
 			options: {
-				configFile: resolve(__dirname, ".eslintrc-vue-app.js"),
+				configFile: resolve(__dirname, ".eslintrc-rendererProcess.js"),
 				emitError: true,
 				emitWarning: true,
 				failOnError: true,
 				failOnWarning: true
 			}
 		}, {
-			test: /\.vue$/i,
-			loader: "vue-loader"
+			test: /\.ts$/,
+			loader: 'ts-loader',
+			exclude: /node_modules/,
+			options: { appendTsSuffixTo: [/\.vue$/] }
 		}, {
-			test: /\.m?js$/i,
-			loader: "babel-loader",
-			exclude: /(node_modules|bower_components)/,
+			test: /\.vue$/i,
+			loader: "vue-loader",
 			options: {
-				comments: false,
-				minified: true
+				esModule: true
 			}
 		}, {
 			test: /\.css$/i,
@@ -66,53 +66,6 @@ module.exports = {
 					}
 				},
 				"postcss-loader"
-			]
-		}, {
-			test: /\.scss$/i,
-			use: [
-				"vue-style-loader",
-				{
-					loader: "css-loader",
-					options: {
-						importLoaders: 2
-						// 0 => no loaders (default);
-						// 1 => postcss-loader;
-						// 2 => postcss-loader, sass-loader
-					}
-				},
-				"postcss-loader",
-				{
-					loader: "sass-loader",
-					options: {
-						sassOptions: {
-							outputStyle: "compressed"
-						}
-					}
-				}
-			]
-		}, {
-			test: /\.sass$/i,
-			use: [
-				"vue-style-loader",
-				{
-					loader: "css-loader",
-					options: {
-						importLoaders: 2
-						// 0 => no loaders (default);
-						// 1 => postcss-loader;
-						// 2 => postcss-loader, sass-loader
-					}
-				},
-				"postcss-loader",
-				{
-					loader: "sass-loader",
-					options: {
-						sassOptions: {
-							indentedSyntax: true,
-							outputStyle: "compressed"
-						}
-					}
-				}
 			]
 		}, {
 			test: /\.svg(\?.*)?$/i,
@@ -158,7 +111,7 @@ module.exports = {
 		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
 			filename: "index.html",
-			template: resolve("src/vue-app/index.html"),
+			template: resolve("src/rendererProcess/index.html"),
 			inject: true,
 			minify: {
 				collapseInlineTagWhitespace: true,
@@ -171,10 +124,11 @@ module.exports = {
 		})
 	],
 	resolve: {
-		extensions: [".vue", ".js", "mjs", ".json"],
+		extensions: [".vue", ".ts", ".js", "mjs", ".json"],
 		alias: {
 			"vue$": "vue/dist/vue.esm.js",
-			"@": resolve(__dirname, "src/vue-app/")
+			"renderer": resolve(__dirname, "src/rendererProcess/"),
+			"shared": resolve(__dirname, "src/shared/"),
 		}
 	}
 };

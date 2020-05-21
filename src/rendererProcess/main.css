@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+
+/** Custom styles :: START **/
+/** Custom styles :: END **/
+
+@tailwind utilities;
